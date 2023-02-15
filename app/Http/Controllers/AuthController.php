@@ -52,4 +52,14 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
+
+    public function logout(){
+        Auth::user()->tokens->each(function($token, $key){
+            $token->delete();
+        });
+
+        return [
+            'message' => 'logged successfuly'
+        ];
+    }
 }
