@@ -20,14 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::prefix('videos')->group(function () {
         Route::get("/", [VideoController::class, 'index']);
+        Route::post("/upload", [VideoController::class, 'upload']);
     });
 });
-
 
 
 Route::prefix('users')->group(function () {

@@ -2,65 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use Storage;
+use Validator;
 use App\Models\Video;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class VideoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(): Response
     {
         $videos = Video::all();
         return response($videos);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): Response
-    {
-        //
+
+    public function upload(Request $request){
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'video' => 'required|file|mimetypes:video/mp4'
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+
+        if (!$request->hasFile('video')){
+            return response()->json([
+                'message' => 'Missing video'
+            ], 500);
+        }
+
+        $path = $request->file('video')->store('videos', ['disk' => 'myVideos']);
+
+        $user = Video::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'video_name' => $path
+        ]);
+
+        return response()->json([
+            'message' => 'Video uploaded successfully'
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request): RedirectResponse
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Video $video): Response
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Video $video): Response
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Video $video): RedirectResponse
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Video $video): RedirectResponse
     {
         //
