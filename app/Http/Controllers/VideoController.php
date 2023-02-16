@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\DB;
 class VideoController extends Controller
 {
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $videos = Video::all();
+        $videos = Video::orderBy('id', 'desc')->paginate(1);
         return response($videos);
     }
 
@@ -50,25 +50,18 @@ class VideoController extends Controller
         ]);
     }
 
-
-    public function store(Request $request): RedirectResponse
-    {
-        //
-    }
-
-    public function show(Video $video): Response
-    {
-        //
-    }
-
-    public function edit(Video $video): Response
-    {
-        //
-    }
-
     public function update(Request $request, Video $video): RedirectResponse
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'string|max:255',
+            'description' => 'string|max:255',
+            'video' => 'file|mimetypes:video/mp4'
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors());
+        }
+
     }
 
     public function destroy(Video $video): RedirectResponse
