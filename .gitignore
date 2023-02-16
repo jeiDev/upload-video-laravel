@@ -19,4 +19,4 @@ yarn-error.log
 /commands
 Dockerfile
 docker-compose.yml
-/compose
+/docker-compose
