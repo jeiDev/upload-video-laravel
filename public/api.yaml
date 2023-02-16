@@ -212,6 +212,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedResponse"
+
   ## videos
   /videos:
     get:
@@ -234,6 +235,127 @@ paths:
               schema:
                 $ref: "#/components/schemas/VideoResponse"
 
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+  /videos/upload:
+    post:
+      security:
+        - BearerAuth: []
+      tags:
+        - Video
+      summary: Upload videos.
+      requestBody:
+        description: upload videos and information about video
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                video:
+                  type: file
+      responses:
+        '200':
+          description: Response data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+  /videos/update/{id}:
+    post:
+      security:
+        - BearerAuth: []
+      tags:
+        - Video
+      summary: Update videos.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the video
+      requestBody:
+        description: Update videos and information
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                video:
+                  type: file
+      responses:
+        '200':
+          description: Response data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+  /videos/{id}:
+    delete:
+      security:
+        - BearerAuth: []
+      tags:
+        - Video
+      summary: Update videos.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: id of the video
+      responses:
+        '200':
+          description: Response data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
         '400':
           description: Invalid data
           content:
