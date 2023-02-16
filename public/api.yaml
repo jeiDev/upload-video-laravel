@@ -47,6 +47,63 @@ components:
       properties:
         message:
           type: string
+    Video:
+      type: object
+      properties:
+          id:
+            type: number
+          title:
+            type: string
+          description:
+            type: string
+          video_name:
+            type: string
+          created_at:
+            type: string
+          updated_at:
+            type: string
+    VideoLink:
+      type: object
+      properties:
+          url:
+            type: string
+          label:
+            type: string
+          active:
+            type: boolean
+    VideoResponse:
+      type: object
+      properties:
+          current_page:
+            type: number
+          data:
+            type: array
+            items:
+              $ref: "#/components/schemas/UserResponse"
+          first_page_url:
+            type: string
+          from:
+            type: number
+          last_page:
+            type: number
+          last_page_url:
+            type: string
+          links:
+            type: array
+            items:
+              $ref: "#/components/schemas/VideoLink"
+          next_page_url:
+            type: string
+          path:
+            type: string
+          per_page:
+            type: number
+          prev_page_url:
+            type: string
+          to:
+            type: number
+          total:
+            type: number
 
 security:
   - BearerAuth: []
@@ -54,6 +111,8 @@ security:
 tags:
     - name: User
       description: All related to users.
+    - name: Video
+      description: All related to vides.
 
 servers:
   - url: http://localhost:8000/api
@@ -62,6 +121,7 @@ servers:
     description: production server
 
 paths:
+  ## users
   /users/register:
     post:
       summary: Crearte new user.
@@ -152,4 +212,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedResponse"
+  ## videos
+  /videos:
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - Video
+      summary: Get videos.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: string
+          description: pagination videos
+      responses:
+        '200':
+          description: Response data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VideoResponse"
 
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
