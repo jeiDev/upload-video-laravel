@@ -28,7 +28,6 @@ services:
             - ./docker-compose/nginx:/etc/nginx/conf.d/
         networks:
             - test-network
-        entrypoint: sh -c "sleep 30 && php /var/www/html/artisan migrate && apache2-foreground"
 
     db:
         image: mysql:5.7
