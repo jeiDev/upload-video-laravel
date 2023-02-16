@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: Coronatime API
+  description: Here goes description
+  version: 0.1.9
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    UserResponse:
+      type: object
+      properties:
+          accessToken:
+            type: string
+          tokenType:
+            type: string
+          user:
+            type: object
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+              updated_at:
+                type: string
+              created_at:
+                type: string
+              id:
+                type: number
+    ErrorResponse:
+      type: object
+      properties:
+        nameProperty:
+          type: array
+          items:
+            type: string
+    UnauthorizedResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+security:
+  - BearerAuth: []
+
+tags:
+    - name: User
+      description: All related to users.
+
+servers:
+  - url: http://localhost:8000/api
+    description: local server
+  - url: http://producation.app/api
+    description: production server
+
+paths:
+  /users/register:
+    post:
+      summary: Crearte new user.
+      tags:
+        - User
+      requestBody:
+        description: Data for create user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Response data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /users/login:
+    post:
+      summary: Login user.
+      tags:
+        - User
+      requestBody:
+        description: Login auth for user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Response data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+  /users/logout:
+    post:
+      security:
+        - BearerAuth: []
+      summary: Logout user.
+      tags:
+        - User
+      responses:
+        '200':
+          description: Response data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        '401':
+          description: Unauthorize
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+

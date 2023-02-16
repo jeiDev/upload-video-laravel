@@ -29,13 +29,13 @@ class VideoController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors());
+            return response()->json($validator->errors(), 400);
         }
 
         if (!$request->hasFile('video')){
             return response()->json([
                 'message' => 'Missing video'
-            ], 500);
+            ], 400);
         }
 
         $path = $request->file('video')->store('videos', ['disk' => 'myVideos']);
@@ -60,7 +60,7 @@ class VideoController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors());
+            return response()->json($validator->errors(), 400);
         }
 
         $video = Video::findOrFail($id);
